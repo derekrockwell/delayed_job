@@ -61,6 +61,12 @@ module Delayed
         opts.on('--queue=queue', "Specify which queue DJ must look up for jobs") do |queue|
           @options[:queues] = queue.split(',')
         end
+        opts.on('--except-queues=queues', "Specify which queue DJ must look up for jobs") do |queues|
+          @options[:except_queues] = queues.split(',')
+        end
+        opts.on('--except-queue=queue', "Specify which queue DJ must look up for jobs") do |queue|
+          @options[:except_queues] = queue.split(',')
+        end        
         opts.on('--exit-on-complete', "Exit when no more jobs are available to run. This will exit if all jobs are scheduled to run in the future.") do
           @options[:exit_on_complete] = true
         end

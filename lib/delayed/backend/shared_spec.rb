@@ -371,6 +371,25 @@ shared_examples_for "a delayed_job backend" do
       end
     end
 
+    context "worker doesn't run queues in except queue" do 
+      before(:each) do
+        worker.except_queues = ['small']
+      end     
+
+      it "works jobs except those in except queues" do 
+        expect(SimpleJob.runs).to eq(0)
+
+        create_job(:queue => "small")
+        create_job(:queue => "large")
+        create_job(:queue => "medium")
+        create_job
+        worker.work_off
+
+        expect(SimpleJob.runs).to eq(3)
+      end
+
+    end
+
     context "when worker does not have queue set" do
       before(:each) do
         worker.queues = []

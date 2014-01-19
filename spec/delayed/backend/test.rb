@@ -60,8 +60,8 @@ module Delayed
             (j.locked_at.nil? || j.locked_at < db_time_now - max_run_time || j.locked_by == worker_name) &&
             !j.failed?
           end
-
           jobs = jobs.select{|j| Worker.queues.include?(j.queue)}   if Worker.queues.any?
+          jobs = jobs.select{|j| !Worker.except_queues.include?(j.queue)}  if Worker.except_queues.any?
           jobs = jobs.select{|j| j.priority >= Worker.min_priority} if Worker.min_priority
           jobs = jobs.select{|j| j.priority <= Worker.max_priority} if Worker.max_priority
           jobs.sort_by{|j| [j.priority, j.run_at]}[0..limit-1]

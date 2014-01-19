@@ -16,9 +16,10 @@ module Delayed
     DEFAULT_DELAY_JOBS       = true
     DEFAULT_QUEUES           = []
     DEFAULT_READ_AHEAD       = 5
+    DEFAULT_EXCEPT_QUEUES    = []
 
     cattr_accessor :min_priority, :max_priority, :max_attempts, :max_run_time,
-      :default_priority, :sleep_delay, :logger, :delay_jobs, :queues,
+      :default_priority, :sleep_delay, :logger, :delay_jobs, :queues, :except_queues,
       :read_ahead, :plugins, :destroy_failed_jobs, :exit_on_complete
 
     # Named queue into which jobs are enqueued by default
@@ -37,6 +38,7 @@ module Delayed
       self.delay_jobs       = DEFAULT_DELAY_JOBS
       self.queues           = DEFAULT_QUEUES
       self.read_ahead       = DEFAULT_READ_AHEAD
+      self.except_queues    = DEFAULT_EXCEPT_QUEUES
     end
 
     reset
@@ -109,7 +111,7 @@ module Delayed
       @quiet = options.has_key?(:quiet) ? options[:quiet] : true
       @failed_reserve_count = 0
 
-      [:min_priority, :max_priority, :sleep_delay, :read_ahead, :queues, :exit_on_complete].each do |option|
+      [:min_priority, :max_priority, :sleep_delay, :read_ahead, :queues, :except_queues, :exit_on_complete].each do |option|
         self.class.send("#{option}=", options[option]) if options.has_key?(option)
       end
 
